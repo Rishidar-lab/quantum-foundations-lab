@@ -22,6 +22,21 @@ relabeled).
 | 2026-08-30 | Qiskit assembly | `teleportation/circuit.py`: `build_teleportation_circuit` (StatePreparation payload, `h`/`cx`, mid-circuit `measure`, `if_test` X/Z correction; `deferred=True` → coherent `cx`/`cz`) and `build_verification_circuit` (ry/rz payload + inverse on q2, no multiplexer — Aer/dynamic-HW clean) |
 | 2026-08-30 | IBM job (generated, not run) | `jobs/submit_ibm_job.py` (`--dry-run` offline; else `SamplerV2` least-busy ≥3q, writes `jobs/<id>.json`), `jobs/compare_counts.py` (`|P_hw(out=0) − P_sim(out=0)| ≤ tol`), `jobs/README.md` |
 
+## Foundations lab (Phases 1–7, 2026-08-30)
+
+| Phase | Deliverable | Notes |
+|------|-------------|-------|
+| 1 | `AUDIT.md`, `tools/mutation_audit.py` | test classification (M/P/B/I/R/C); 6 tautologies named; 10 mutations — 9 caught, 1 (global phase) correctly invisible; refuses to run on a dirty tree, restores via `git checkout` |
+| 2 | `foundations/` + `tests/test_foundations_crosscheck.py` (53) | 26 concepts, NumPy vs Qiskit asserted equal + a checked physical prediction each; `reverse_qubit_order` is the tested endianness bridge |
+| 2 | `tests/test_foundations_weakness_fixes.py` (107) | closes W1–W5: independent Bell literals, closed-form teleportation identity (no gate replay), Pauli-image uncorrected branch, transpose-sensitive partial trace, seed sweeps |
+| 3 | `experiments/teleport_lab.py` + tests (32) | teleports `|0>,|1>,|+>,|->,|+i>,|-i>` + random; `F_ideal` (statevector, exact) vs `F_emp` (3-basis tomography, finite-shot ± Wilson CI); Alice-outcome χ²; JSON tagged SIMULATED |
+| 4 | `experiments/noise_lab.py`, `channels.py`, `stats.py` + tests (50) | 6 Kraus channels cross-checked vs `qiskit_aer.noise`; readout error; fidelity/purity/⟨σ⟩ sweeps; teleportation-under-gate-noise degradation curve; seeded |
+| 5 | `jobs/pipeline.py`, `jobs/preflight.py`, updated `submit`/`compare` + tests (9) | LA → ideal → shots → noisy → (IBM); stages 1–4 fully offline; submission needs `--yes-spend-credits` or an interactive backend-name confirmation; `docs/hardware_runs.md` schema+log (empty) |
+| 6 | `lessons/` (20 lessons) + `tests/test_lessons.py` (43), `docs/progression.md` | 10-part lessons F1→F24→T→labs; `python -m lessons.run`; challenge solutions gated behind `--reveal`; progress in git-ignored `.lessons_progress.json` |
+| 7 | `README.md`, `Makefile`, `.python-version`, tightened `requirements.txt`, CI | clean-env install from `requirements.lock.txt` verified: 650 passed, foundations 26/26, mutation audit PASS, first experiment runs |
+
+Suite: **356 → 650 passing** (294 new). Full run ~20 s, entirely offline.
+
 ## Nodes
 
 | Date | Node | Status | Notes |

@@ -1,7 +1,8 @@
-# Quantum teleportation kata project — pinned at install time (see docs/changelog.md).
+# Constrained ranges. For a byte-exact environment use requirements.lock.txt
+# (what CI installs). Python 3.12 required.
 numpy>=2.0,<3
 qiskit>=1.2,<3
-qiskit-aer>=0.15
-qiskit-ibm-runtime>=0.30
-pytest>=8.0
-matplotlib>=3.8
+qiskit-aer>=0.15,<1
+qiskit-ibm-runtime>=0.30,<1
+pytest>=8.0,<10
+matplotlib>=3.8,<4

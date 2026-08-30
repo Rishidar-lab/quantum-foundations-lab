@@ -1,8 +1,10 @@
 # Python
 .venv/
+.venv_check/
 __pycache__/
 *.pyc
 .pytest_cache/
+.ruff_cache/
 
 # Qiskit / IBM Quantum credentials & local state
 .qiskit/
@@ -20,10 +22,17 @@ qiskit-ibm.json
 *credential*
 ibm_quantum_token*
 
-# IBM job artifacts written by jobs/submit_ibm_job.py (may contain backend/job metadata)
+# IBM job artifacts + hardware records written by jobs/*.py
 jobs/*.json
 !jobs/.gitkeep
 
-# Images (except docs assets)
+# generated experiment output (regenerate with `make experiments`)
+experiments/results/*
+!experiments/results/.gitkeep
+
+# learning-interface progress (per-user)
+.lessons_progress.json
+
+# images (except committed docs assets)
 *.png
-!docs/*.png
+!docs/**/*.png

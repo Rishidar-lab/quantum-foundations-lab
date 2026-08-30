@@ -17,10 +17,19 @@ jobs:
           python-version: "3.12"
           cache: pip
 
-      - name: Install dependencies
+      - name: Install locked dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.lock.txt
 
-      - name: Run pytest
-        run: pytest -ra -q
+      - name: Full test suite
+        run: pytest
+
+      - name: NumPy vs Qiskit foundation cross-checks
+        run: python -m foundations
+
+      - name: Adversarial / mutation audit
+        run: python tools/mutation_audit.py
+
+      - name: Offline pipeline smoke test
+        run: python jobs/pipeline.py --state plus --shots 2000

@@ -11,10 +11,17 @@ Requires IBM Quantum credentials. Save them once:
 
 or export QISKIT_IBM_TOKEN (and QISKIT_IBM_INSTANCE).
 
+Nothing is submitted unless you EXPLICITLY confirm the spend, either by
+retyping the backend name at the interactive prompt or by passing
+`--yes-spend-credits` for non-interactive use. Credentials being present is
+never treated as permission to submit.
+
 Usage
 -----
     python jobs/submit_ibm_job.py --dry-run                 # offline: build + Aer expectation
-    python jobs/submit_ibm_job.py --state plus --shots 4096
+    python jobs/preflight.py                                # check config, submit nothing
+    python jobs/submit_ibm_job.py --state plus --shots 4096 # will prompt for confirmation
+    python jobs/submit_ibm_job.py --state plus --yes-spend-credits   # non-interactive submit
     python jobs/submit_ibm_job.py --theta 1.17 --phi 0.83 --backend ibm_torino
     python jobs/submit_ibm_job.py --deferred                # coherent variant, no dynamic circuit
 
@@ -79,6 +86,11 @@ def main() -> int:
     ap.add_argument("--backend", default=None, help="explicit backend; default = least busy >=3q")
     ap.add_argument("--deferred", action="store_true", help="coherent variant (no dynamic circuit)")
     ap.add_argument("--dry-run", action="store_true", help="offline: build + Aer expectation only")
+    ap.add_argument(
+        "--yes-spend-credits",
+        action="store_true",
+        help="skip the interactive confirmation and submit (spends IBM queue time)",
+    )
     args = ap.parse_args()
 
     theta, phi = resolve_angles(args)
@@ -106,6 +118,20 @@ def main() -> int:
 
     isa = generate_preset_pass_manager(optimization_level=1, backend=backend).run(qc)
     print(f"ISA circuit: depth {isa.depth()}, ops {dict(isa.count_ops())}")
+
+    # ---- explicit spend confirmation -------------------------------------
+    if not args.yes_spend_credits:
+        if not sys.stdin.isatty():
+            print(
+                "\nrefusing to submit: this consumes IBM Quantum queue time.\n"
+                "re-run with --yes-spend-credits (non-interactive) or from a terminal."
+            )
+            return 3
+        print(f"\nabout to submit {args.shots} shots to '{backend.name}' (spends queue time).")
+        typed = input(f"type the backend name '{backend.name}' to confirm, anything else to abort: ")
+        if typed.strip() != backend.name:
+            print("aborted, nothing submitted.")
+            return 3
 
     job = SamplerV2(mode=backend).run([isa], shots=args.shots)
     job_id = job.job_id()
