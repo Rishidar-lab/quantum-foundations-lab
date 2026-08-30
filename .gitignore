@@ -1,0 +1,29 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Qiskit / IBM Quantum credentials & local state
+.qiskit/
+qiskit-ibm.json
+*qiskit*ibm*.json
+
+# Secrets / credentials / tokens (never commit)
+.env
+*.env
+.env.*
+*.key
+*.pem
+*secret*
+*token*
+*credential*
+ibm_quantum_token*
+
+# IBM job artifacts written by jobs/submit_ibm_job.py (may contain backend/job metadata)
+jobs/*.json
+!jobs/.gitkeep
+
+# Images (except docs assets)
+*.png
+!docs/*.png
