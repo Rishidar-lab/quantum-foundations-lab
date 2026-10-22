@@ -1,5 +1,12 @@
 # Quantum Foundations Lab
 
+## Status
+
+**MAINTAIN — executable research lab, v0.1.0.**
+
+- IMPLEMENTED / TESTED: teleportation protocol rebuilt from postulates with cross-checking tests (650-test suite as stated below); CI green on `main` and `v0.1.0`.
+- OPEN: no LICENSE file yet (owner decision pending); not a general quantum simulator.
+
 An **executable quantum-computing foundations laboratory**, built by
 reverse-engineering the 3-qubit quantum-teleportation protocol down to its
 quantum-mechanical postulates and rebuilding it so that the **implementation, the
